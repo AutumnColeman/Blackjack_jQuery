@@ -1,0 +1,27 @@
+#table {
+  background-color: #006a56;
+  width: 700px;
+  height: 300px;
+  border-radius: 50px;
+  border: 5px solid #633517;
+  padding: 10%;
+}
+label {
+  margin: 56px 12px;
+}
+
+.buttons {
+  margin-top: 14%;
+  margin-left: 40%;
+}
+
+#player-hand, #dealer-hand {
+  background-color: #00b794;
+  width: 600px;
+  height: 100px;
+}
+
+img {
+  height: 100%;
+  width: 12%;
+}
