@@ -55,7 +55,8 @@ $(document).ready(function() {
     { point: 12, suit: 'spades' },
     { point: 13, suit: 'spades' }
   ];
-  console.log(deck[4]);
+  var shuffledDeck = [];
+  
   $('#deal-button').click(function() {
     dealCards(deck);
     console.log(deck);
@@ -64,8 +65,21 @@ $(document).ready(function() {
   });
 
   $('#hit-button').click(function () {
-    $('#player-hand').append('<img class="card" src="images/3_of_diamonds.png">');
+    var hitcard = deck.pop();
+    playerHand.push(hitcard);
+    $('#player-hand').append('<img class="card" src="' + getCardImageUrl(hitcard) + '">');
+    $('#player-points').text(calculatePoints(playerHand));
+
   });
+
+  $('#stand-button').click(function () {
+    $('#deal-button').prop('disabled', true);
+    $('#hit-button').prop('disabled', true);
+  });
+
+  function shuffle(deck){
+
+  }
 
 
   function dealCards(deck) {
@@ -75,14 +89,41 @@ $(document).ready(function() {
     var pcard2 = deck.pop();
     playerHand.push(pcard2);
     $('#player-hand').append('<img class="card" src="' + getCardImageUrl(pcard2) + '">');
+    $('#player-points').text(calculatePoints(playerHand));
+    var total = calculatePoints(playerHand);
+    if (total > 21) {
+      console.log(total);
+      $('#messages').text('You busted sucka!');
+    } else {
+      return;
+    }
+
+
     var dcard1 = deck.pop();
     dealerHand.push(dcard1);
     $('#dealer-hand').append('<img class="card" src="' + getCardImageUrl(dcard1) + '">');
     var dcard2 = deck.pop();
     dealerHand.push(dcard2);
     $('#dealer-hand').append('<img class="card" src="' + getCardImageUrl(dcard2) + '">');
+    $('#dealer-points').text(calculatePoints(dealerHand));
+    var total2 = calculatePoints(dealerHand);
+    if (total2 > 21) {
+      console.log(total);
+      $('#messages').text('Dealer busted, you win!');
+    } else {
+      return;
+    }
 
   }
+
+  // function bust(sum) {
+  //   var total = calculatePoints(hand);
+  //   if (total > 21) {
+  //     $('#message').append('You busted sucka!');
+  //   } else {
+  //     return;
+  //   }
+  // }
 
   function getCardImageUrl(card) {
     var name = card.point;
@@ -98,5 +139,18 @@ $(document).ready(function() {
     }
     return 'images/' + name + '_of_' + card.suit + '.png';
   }
+
+  function calculatePoints(hand) {
+    var arr = hand;
+    var combine = function(a, b) {
+      console.log('a=', a, 'b=', b);
+      return a + b.point;
+    };
+
+    var sum = arr.reduce(combine, 0);
+    return sum;
+  }
+
+
 
 });
