@@ -1,27 +1,31 @@
 body {
   font-family: 'Comfortaa', cursive;
+  background-color: #6a0014;
 }
 #table {
+  margin-right:auto;
+  margin-left:auto;
   background-color: #006a56;
-  width: 700px;
+  width: 600px;
   height: 300px;
   border-radius: 50px;
   border: 5px solid #633517;
   padding: 10%;
+  border-radius: 0 0 500px 500px;
 }
+
 label {
   margin: 56px 12px;
 }
 
 .buttons {
-  margin-top: 14%;
-  margin-left: 40%;
+  margin: 4% 28%;
 }
 
 #player-hand, #dealer-hand {
   background-color: #00b794;
   width: 600px;
-  height: 100px;
+  height: 117px;
   padding-bottom: 2%;
 }
 
@@ -30,24 +34,35 @@ label {
   padding: 8px;
 }
 
-#deal-button {
-  width: 80px;
-  height: 40px;
-  border-radius: 10%;
-  font-size: 1em;
-
+.btn {
+  background: #009d7f;
+  background-image: -webkit-linear-gradient(top, #00B794, #005141);
+  background-image: -moz-linear-gradient(top, #00B794, #005141);
+  background-image: -ms-linear-gradient(top, #00B794, #005141);
+  background-image: -o-linear-gradient(top, #00B794, #005141);
+  background-image: linear-gradient(to bottom, #00B794, #005141);
+  -webkit-border-radius: 10;
+  -moz-border-radius: 10;
+  border-radius: 10px;
+  font-family: 'Comfortaa', cursive;
+  color: #000;
+  font-size: 20px;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+  border: none;
 }
 
-#hit-button {
-  width: 80px;
-  height: 40px;
-  border-radius: 10%;
-  font-size: 1em;
+.btn:hover {
+  background: #00b794;
+  text-decoration: none;
 }
 
-#stand-button {
-  width: 80px;
-  height: 40px;
-  border-radius: 10%;
-  font-size: 1em;
+.felt {
+  display: inline-block;
+  margin-top: -58px;
 }
+ .title {
+   font-family: 'Comfortaa', cursive;
+   letter-spacing: 6px;
+   text-align: center;
+ }

@@ -38,11 +38,7 @@ $(document).ready(function() {
     var dealerTotal = calculatePoints(dealerHand);
     var playerTotal = calculatePoints(playerHand);
     if (dealerTotal < playerTotal && dealerTotal < 21) {
-      var hitcard = deck.pop();
-      dealerHand.push(hitcard);
-      $('#dealer-hand').append('<img class="card" src="' + getCardImageUrl(hitcard) + '">');
-      $('#dealer-points').text(calculatePoints(playerHand));
-
+      dealCards(deck, '#dealer-hand', '#dealer-points', dealerHand);
     }
   });
 
@@ -58,18 +54,6 @@ $(document).ready(function() {
     handHolderArr.push(card);
     $(handHolder).append('<img class="card" src="' + getCardImageUrl(card) + '">');
     $(handPoints).text(calculatePoints(handHolderArr));
-    // var pcard2 = deck.pop();
-    // playerHand.push(pcard2);
-    // $('#player-hand').append('<img class="card" src="' + getCardImageUrl(pcard2) + '">');
-    // $('#player-points').text(calculatePoints(playerHand));
-    //
-    // var dcard1 = deck.pop();
-    // dealerHand.push(dcard1);
-    // $('#dealer-hand').append('<img class="card" src="' + getCardImageUrl(dcard1) + '">');
-    // var dcard2 = deck.pop();
-    // dealerHand.push(dcard2);
-    // $('#dealer-hand').append('<img class="card" src="' + getCardImageUrl(dcard2) + '">');
-    // $('#dealer-points').text(calculatePoints(dealerHand));
   }
 
   function shuffle(deck) {  //shuffles the deck
@@ -123,7 +107,6 @@ $(document).ready(function() {
       // console.log('a=', a, 'b=', b); for testing
       return a + b.point;
     };
-
     var sum = arr.reduce(combine, 0);
     return sum;
   }
