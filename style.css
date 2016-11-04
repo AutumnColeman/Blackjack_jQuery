@@ -66,4 +66,12 @@ label {
    font-family: 'Comfortaa', cursive;
    letter-spacing: 6px;
    text-align: center;
+   margin: 0;
+ }
+ .red {
+   font-family: 'Comfortaa', cursive;
+   letter-spacing: 6px;
+   text-align: center;
+   color: red;
+   margin: 0;
  }

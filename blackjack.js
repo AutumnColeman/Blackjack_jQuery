@@ -1,8 +1,46 @@
 $(document).ready(function() {
+
+
+  //Deck constructor
+  function Deck() {
+    this.cardArray = [];
+    for (var i = 1; i <= 13; i++) {
+      this.cardArray.push(new Card(i, 'diamonds'));
+      this.cardArray.push(new Card(i, 'clubs'));
+      this.cardArray.push(new Card(i, 'hearts'));
+      this.cardArray.push(new Card(i, 'spades'));
+    }
+  }
+
+  Deck.prototype.numOfCards = function() {
+    return this.cardArray.length;
+  };
+
+  Deck.prototype.draw = function() {
+    return this.cardArray.pop();
+  };
+
+  Deck.prototype.getCard = function(i) {
+    return this.cardArray[i - 1];
+  };
+
+  Deck.prototype.shuffle = function() {
+    for (var i = 0; i < this.cardArray.length; i++) {
+      var rand = Math.floor(Math.random() * this.cardArray.length),
+          rand2 = Math.floor(Math.random() * this.cardArray.length),
+          temp;
+      temp = this.cardArray[rand];
+      this.cardArray[rand] = this.cardArray[rand2];
+      this.cardArray[rand2] = temp;
+    }
+  };
+
+
+
   var dealerHand = new Hand();
   var playerHand = new Hand();
-  var deck = newDeck();
-  shuffle(deck);
+  var deck = new Deck();
+  deck.shuffle();
 
 
   $('#deal-button').click(function() { //Deals inital cards
@@ -50,34 +88,34 @@ $(document).ready(function() {
 
 
   function dealCards(deck, handHolder, handPoints, handHolderArr) { //puns for days
-    var card1 = deck.pop();
-    var card2 = deck.pop();
+    var card1 = deck.draw();
+    var card2 = deck.draw();
     handHolderArr.addCard(card1);
-    handHolderArr.addCard(card2);  //wtf?
+    handHolderArr.addCard(card2);
     $(handHolder).append('<img class="card" src="' + card1.getImageUrl() + '">');
     $(handHolder).append('<img class="card" src="' + card2.getImageUrl() + '">');
-    $(handPoints).text(handHolderArr.calculatePoints());//wtf?
+    $(handPoints).text(handHolderArr.calculatePoints());
     console.log(handHolderArr.calculatePoints());
   }
 
-  function shuffle(deck) {  //shuffles the deck
-   var currentIndex = deck.length, temporaryValue, randomIndex;
+  // function shuffle(deck) {  //shuffles the deck
+  //  var currentIndex = deck.length, temporaryValue, randomIndex;
 
    // While there remain elements to shuffle...
-   while (0 !== currentIndex) {
-
-     // Pick a remaining element...
-     randomIndex = Math.floor(Math.random() * currentIndex);
-     currentIndex -= 1;
-
-     // And swap it with the current element.
-     temporaryValue = deck[currentIndex];
-     deck[currentIndex] = deck[randomIndex];
-     deck[randomIndex] = temporaryValue;
-   }
-
-   return deck;
-  }
+  //  while (0 !== currentIndex) {
+   //
+  //    // Pick a remaining element...
+  //    randomIndex = Math.floor(Math.random() * currentIndex);
+  //    currentIndex -= 1;
+   //
+  //    // And swap it with the current element.
+  //    temporaryValue = deck[currentIndex];
+  //    deck[currentIndex] = deck[randomIndex];
+  //    deck[randomIndex] = temporaryValue;
+  //  }
+  //
+  //  return deck;
+  // }
 
 
 
@@ -114,7 +152,7 @@ Card.prototype.getImageUrl = function() {
   return "images/" + cardName + "_of_" + this.suit + ".png";
 };
 
-  //hand
+//hand
 function Hand() {
   this.hand = [];
 }
@@ -137,27 +175,16 @@ Hand.prototype.calculatePoints = function() {  //calculates points for a hand
   };
   return this.hand.reduce(combine, 0);
 };
-  //
-  // function calculatePoints(hand) { //calculates the points for a hand
-  //   var arr = hand;
-  //   var combine = function(a, b) {
-  //     // console.log('a=', a, 'b=', b); for testing
-  //     return a + b.point;
-  //   };
-  //   var sum = arr.reduce(combine, 0);
-  //   return sum;
+  // function newDeck() {  //generates the deck
+  //  var deck = [];
+  //  var suits = ['spades', 'hearts', 'clubs', 'diamonds'];
+  //  for (var i = 1; i <= 13; i++) {
+  //    for (var j = 0; j <= 3; j++) {
+  //      deck.push(new Card(i, suits[j]));
+  //    }
+  //  }
+  //  return deck;
   // }
-
-  function newDeck() {  //generates the deck
-   var deck = [];
-   var suits = ['spades', 'hearts', 'clubs', 'diamonds'];
-   for (var i = 1; i <= 13; i++) {
-     for (var j = 0; j <= 3; j++) {
-       deck.push(new Card(i, suits[j]));
-     }
-   }
-   return deck;
-  }
 
   // function winner() {
   //   if (calculatePoints(playerHand) < 21 && (calculatePoints(playerHand) > (calculatePoints(dealerHand)) {
