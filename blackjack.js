@@ -3,36 +3,32 @@ $(document).ready(function() {
   var playerHand = [];
   var deck = newDeck();
   shuffle(deck);
-  console.log(deck);
 
 
-  $('#deal-button').click(function() {
+  $('#deal-button').click(function() { //Deals inital cards
     // dealCards(deck);
-    dealCards(deck, '#player-hand');
-    dealCards(deck, '#player-hand');
-    dealCards(deck, '#dealer-hand');
-    dealCards(deck, '#dealer-hand');
-    console.log(deck);
+    dealCards(deck, '#player-hand', '#player-points', playerHand);
+    dealCards(deck, '#player-hand', '#player-points', playerHand);
+    dealCards(deck, '#dealer-hand', '#dealer-points', dealerHand);
+    dealCards(deck, '#dealer-hand', '#dealer-points', dealerHand);
     console.log(playerHand);
     console.log(dealerHand);
   });
 
-  $('#hit-button').click(function () {
-    var hitcard = deck.pop();
-    playerHand.push(hitcard);
-    $('#player-hand').append('<img class="card" src="' + getCardImageUrl(hitcard) + '">');
+  $('#hit-button').click(function () { //Hit me!  Gives player additional card/s
+    dealCards(deck, '#player-hand', '#player-points', playerHand);
     $('#player-points').text(calculatePoints(playerHand));
     var total = calculatePoints(playerHand);
     if (total > 21) {
       console.log(total);
-      $('#messages').text('You busted sucka!');
+      $('#messages').text('Bust');
       $('#deal-button').prop('disabled', true);
       $('#hit-button').prop('disabled', true);
     }
     var total2 = calculatePoints(dealerHand);
     if (total2 > 21) {
       console.log(total);
-      $('#messages').text('Dealer busted, you win!');
+      $('#messages').text('Dealer busts');
     }
   });
 
@@ -57,10 +53,11 @@ $(document).ready(function() {
   // }
 
 
-  function dealCards(deck, handHolder) { //haha
+  function dealCards(deck, handHolder, handPoints, handHolderArr) { //puns for days
     var card = deck.pop();
-    playerHand.push(card);
+    handHolderArr.push(card);
     $(handHolder).append('<img class="card" src="' + getCardImageUrl(card) + '">');
+    $(handPoints).text(calculatePoints(handHolderArr));
     // var pcard2 = deck.pop();
     // playerHand.push(pcard2);
     // $('#player-hand').append('<img class="card" src="' + getCardImageUrl(pcard2) + '">');
@@ -93,7 +90,7 @@ $(document).ready(function() {
 
    return deck;
   }
-  console.log(shuffle(deck));
+
 
 
   // function bust(sum) {
@@ -123,7 +120,7 @@ $(document).ready(function() {
   function calculatePoints(hand) { //calculates the points for a hand
     var arr = hand;
     var combine = function(a, b) {
-      console.log('a=', a, 'b=', b);
+      // console.log('a=', a, 'b=', b); for testing
       return a + b.point;
     };
 
