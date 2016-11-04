@@ -7,7 +7,11 @@ $(document).ready(function() {
 
 
   $('#deal-button').click(function() {
-    dealCards(deck);
+    // dealCards(deck);
+    dealCards(deck, '#player-hand');
+    dealCards(deck, '#player-hand');
+    dealCards(deck, '#dealer-hand');
+    dealCards(deck, '#dealer-hand');
     console.log(deck);
     console.log(playerHand);
     console.log(dealerHand);
@@ -53,22 +57,22 @@ $(document).ready(function() {
   // }
 
 
-  function dealCards(deck) {  //deals the cards
-    var pcard1 = deck.pop();
-    playerHand.push(pcard1);
-    $('#player-hand').append('<img class="card" src="' + getCardImageUrl(pcard1) + '">');
-    var pcard2 = deck.pop();
-    playerHand.push(pcard2);
-    $('#player-hand').append('<img class="card" src="' + getCardImageUrl(pcard2) + '">');
-    $('#player-points').text(calculatePoints(playerHand));
-
-    var dcard1 = deck.pop();
-    dealerHand.push(dcard1);
-    $('#dealer-hand').append('<img class="card" src="' + getCardImageUrl(dcard1) + '">');
-    var dcard2 = deck.pop();
-    dealerHand.push(dcard2);
-    $('#dealer-hand').append('<img class="card" src="' + getCardImageUrl(dcard2) + '">');
-    $('#dealer-points').text(calculatePoints(dealerHand));
+  function dealCards(deck, handHolder) { //haha
+    var card = deck.pop();
+    playerHand.push(card);
+    $(handHolder).append('<img class="card" src="' + getCardImageUrl(card) + '">');
+    // var pcard2 = deck.pop();
+    // playerHand.push(pcard2);
+    // $('#player-hand').append('<img class="card" src="' + getCardImageUrl(pcard2) + '">');
+    // $('#player-points').text(calculatePoints(playerHand));
+    //
+    // var dcard1 = deck.pop();
+    // dealerHand.push(dcard1);
+    // $('#dealer-hand').append('<img class="card" src="' + getCardImageUrl(dcard1) + '">');
+    // var dcard2 = deck.pop();
+    // dealerHand.push(dcard2);
+    // $('#dealer-hand').append('<img class="card" src="' + getCardImageUrl(dcard2) + '">');
+    // $('#dealer-points').text(calculatePoints(dealerHand));
   }
 
   function shuffle(deck) {  //shuffles the deck
