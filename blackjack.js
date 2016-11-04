@@ -1,31 +1,31 @@
 $(document).ready(function() {
-  var dealerHand = [];
-  var playerHand = [];
+  var dealerHand = new Hand();
+  var playerHand = new Hand();
   var deck = newDeck();
   shuffle(deck);
 
 
   $('#deal-button').click(function() { //Deals inital cards
     // dealCards(deck);
-    dealCards(deck, '#player-hand', '#player-points', playerHand);
+    // dealCards(deck, '#player-hand', '#player-points', playerHand);
     dealCards(deck, '#player-hand', '#player-points', playerHand);
     dealCards(deck, '#dealer-hand', '#dealer-points', dealerHand);
-    dealCards(deck, '#dealer-hand', '#dealer-points', dealerHand);
+    // dealCards(deck, '#dealer-hand', '#dealer-points', dealerHand);
     console.log(playerHand);
     console.log(dealerHand);
   });
 
   $('#hit-button').click(function () { //Hit me!  Gives player additional card/s
     dealCards(deck, '#player-hand', '#player-points', playerHand);
-    $('#player-points').text(calculatePoints(playerHand));
-    var total = calculatePoints(playerHand);
+    $('#player-points').text(playerHand.calculatePoints());
+    var total = playerHand.calculatePoints();
     if (total > 21) {
       console.log(total);
       $('#messages').text('Bust');
       $('#deal-button').prop('disabled', true);
       $('#hit-button').prop('disabled', true);
     }
-    var total2 = calculatePoints(dealerHand);
+    var total2 = dealerHand.calculatePoints();
     if (total2 > 21) {
       console.log(total);
       $('#messages').text('Dealer busts');
@@ -50,10 +50,14 @@ $(document).ready(function() {
 
 
   function dealCards(deck, handHolder, handPoints, handHolderArr) { //puns for days
-    var card = deck.pop();
-    handHolderArr.push(card);
-    $(handHolder).append('<img class="card" src="' + card.getImageUrl() + '">');
-    $(handPoints).text(calculatePoints(handHolderArr));
+    var card1 = deck.pop();
+    var card2 = deck.pop();
+    handHolderArr.addCard(card1);
+    handHolderArr.addCard(card2);  //wtf?
+    $(handHolder).append('<img class="card" src="' + card1.getImageUrl() + '">');
+    $(handHolder).append('<img class="card" src="' + card2.getImageUrl() + '">');
+    $(handPoints).text(handHolderArr.calculatePoints());//wtf?
+    console.log(handHolderArr.calculatePoints());
   }
 
   function shuffle(deck) {  //shuffles the deck
@@ -86,37 +90,63 @@ $(document).ready(function() {
   //   }
   // }
 
-  function Card(point, suit) {
-    this.point = point;
-    this.suit = suit;
-  }
 
-  Card.prototype.getImageUrl = function() {
-    var cardName = this.point;
-    if(cardName == 11){
-      cardName = "jack";
+// card constructor
+function Card(point, suit) {
+  this.point = point;
+  this.suit = suit;
+}
+
+Card.prototype.getImageUrl = function() {
+  var cardName = this.point;
+  if(cardName == 11){
+    cardName = "jack";
+  }
+  if(cardName == 12){
+    cardName = "queen";
+  }
+  if(cardName == 13){
+    cardName = "king";
+  }
+  if(cardName == 1){
+    cardName = "ace";
+  }
+  return "images/" + cardName + "_of_" + this.suit + ".png";
+};
+
+  //hand
+function Hand() {
+  this.hand = [];
+}
+Hand.prototype.addCard = function(card) { //adds card to array
+  this.hand.push(card);
+  this.hand.sort(function (a, b) {
+    return b.point - a.point;
+  });
+};
+Hand.prototype.calculatePoints = function() {  //calculates points for a hand
+  var combine = function(sum, card) {
+    var point = card.point;
+    if (point === 11 || point === 12 || point === 13) {
+      point = 10;
     }
-    if(cardName == 12){
-      cardName = "queen";
+    if (point === 1 && sum <= 10) {
+      point = 11;
     }
-    if(cardName == 13){
-      cardName = "king";
-    }
-    if(cardName == 1){
-      cardName = "ace";
-    }
-    return "images/" + cardName + "_of_" + this.suit + ".png";
+    return sum + point;
   };
-
-  function calculatePoints(hand) { //calculates the points for a hand
-    var arr = hand;
-    var combine = function(a, b) {
-      // console.log('a=', a, 'b=', b); for testing
-      return a + b.point;
-    };
-    var sum = arr.reduce(combine, 0);
-    return sum;
-  }
+  return this.hand.reduce(combine, 0);
+};
+  //
+  // function calculatePoints(hand) { //calculates the points for a hand
+  //   var arr = hand;
+  //   var combine = function(a, b) {
+  //     // console.log('a=', a, 'b=', b); for testing
+  //     return a + b.point;
+  //   };
+  //   var sum = arr.reduce(combine, 0);
+  //   return sum;
+  // }
 
   function newDeck() {  //generates the deck
    var deck = [];
