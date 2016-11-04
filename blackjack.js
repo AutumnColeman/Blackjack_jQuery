@@ -37,9 +37,9 @@ $(document).ready(function() {
     $('#hit-button').prop('disabled', true);
     var dealerTotal = calculatePoints(dealerHand);
     var playerTotal = calculatePoints(playerHand);
-    if (dealerTotal < playerTotal && dealerTotal < 21) {
-      dealCards(deck, '#dealer-hand', '#dealer-points', dealerHand);
-    }
+    // if (dealerTotal < playerTotal && dealerTotal < 21) {
+    //   dealCards(deck, '#dealer-hand', '#dealer-points', dealerHand);
+    // }
   });
 
 
@@ -52,7 +52,7 @@ $(document).ready(function() {
   function dealCards(deck, handHolder, handPoints, handHolderArr) { //puns for days
     var card = deck.pop();
     handHolderArr.push(card);
-    $(handHolder).append('<img class="card" src="' + getCardImageUrl(card) + '">');
+    $(handHolder).append('<img class="card" src="' + card.getImageUrl() + '">');
     $(handPoints).text(calculatePoints(handHolderArr));
   }
 
@@ -86,20 +86,27 @@ $(document).ready(function() {
   //   }
   // }
 
-  function getCardImageUrl(card) {  //renders the image name of the cards
-    var name = card.point;
-      if (card.point === 11) {
-        name = 'jack';
-    } else if (card.point === 12) {
-      name = 'queen';
-    } else if (card.point === 13) {
-      name = 'king';
-    } else if (card.point === 1) {
-      name = 'ace';
-
-    }
-    return 'images/' + name + '_of_' + card.suit + '.png';
+  function Card(point, suit) {
+    this.point = point;
+    this.suit = suit;
   }
+
+  Card.prototype.getImageUrl = function() {
+    var cardName = this.point;
+    if(cardName == 11){
+      cardName = "jack";
+    }
+    if(cardName == 12){
+      cardName = "queen";
+    }
+    if(cardName == 13){
+      cardName = "king";
+    }
+    if(cardName == 1){
+      cardName = "ace";
+    }
+    return "images/" + cardName + "_of_" + this.suit + ".png";
+  };
 
   function calculatePoints(hand) { //calculates the points for a hand
     var arr = hand;
@@ -116,10 +123,18 @@ $(document).ready(function() {
    var suits = ['spades', 'hearts', 'clubs', 'diamonds'];
    for (var i = 1; i <= 13; i++) {
      for (var j = 0; j <= 3; j++) {
-       deck.push({'point': i, 'suit': suits[j]});
+       deck.push(new Card(i, suits[j]));
      }
    }
    return deck;
   }
 
+  // function winner() {
+  //   if (calculatePoints(playerHand) < 21 && (calculatePoints(playerHand) > (calculatePoints(dealerHand)) {
+  //     $('#messages').text('Blackjack!');
+  //   } else if ((calculatePoints(dealerHand) < 21 && (calculatePoints(dealerHand)) > (calculatePoints(playerHand)) {
+  //     $('#messages').text('Dealer wins');
+  //   }
+  // }
 });
+// calculatePoints(playerHand);
