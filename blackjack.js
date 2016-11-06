@@ -35,33 +35,76 @@ $(document).ready(function() {
     }
   };
 
+  //hand
+  function Hand() {
+    this.hand = [];
+  }
+  Hand.prototype.addCard = function(card) { //adds card to array
+    this.hand.push(card);
+    this.hand.sort(function (a, b) {
+      return b.point - a.point;
+    });
+  };
+  Hand.prototype.calculatePoints = function() {  //calculates points for a hand
+    var combine = function(sum, card) {
+      var point = card.point;
+      if (point === 11 || point === 12 || point === 13) {
+        point = 10;
+      }
+      if (point === 1 && sum <= 10) {
+        point = 11;
+      }
+      return sum + point;
+    };
+    return this.hand.reduce(combine, 0);
+  };
 
+  // card constructor
+  function Card(point, suit) {
+    this.point = point;
+    this.suit = suit;
+  }
 
+  Card.prototype.getImageUrl = function() {
+    var cardName = this.point;
+    if(cardName == 11){
+      cardName = "jack";
+    }
+    if(cardName == 12){
+      cardName = "queen";
+    }
+    if(cardName == 13){
+      cardName = "king";
+    }
+    if(cardName == 1){
+      cardName = "ace";
+    }
+    return "images/" + cardName + "_of_" + this.suit + ".png";
+  };
   var dealerHand = new Hand();
   var playerHand = new Hand();
   var deck = new Deck();
   deck.shuffle();
 
-
+//Dealing same total of cards for both players
   $('#deal-button').click(function() { //Deals inital cards
     // dealCards(deck);
     // dealCards(deck, '#player-hand', '#player-points', playerHand);
     dealCards(deck, '#player-hand', '#player-points', playerHand);
     dealCards(deck, '#dealer-hand', '#dealer-points', dealerHand);
     // dealCards(deck, '#dealer-hand', '#dealer-points', dealerHand);
-    console.log(playerHand);
-    console.log(dealerHand);
   });
 
   $('#hit-button').click(function () { //Hit me!  Gives player additional card/s
-    dealCards(deck, '#player-hand', '#player-points', playerHand);
+    var card = deck.draw();
+    playerHand.addCard(card);
+    $('#player-hand').append('<img class="card" src="' + card.getImageUrl() + '">');
     $('#player-points').text(playerHand.calculatePoints());
     var total = playerHand.calculatePoints();
     if (total > 21) {
       console.log(total);
       $('#messages').text('Bust');
-      $('#deal-button').prop('disabled', true);
-      $('#hit-button').prop('disabled', true);
+      $('#hit-button', '#stand-button').attr('disabled', true);
     }
     var total2 = dealerHand.calculatePoints();
     if (total2 > 21) {
@@ -70,21 +113,25 @@ $(document).ready(function() {
     }
   });
 
+//Dealing same total of cards for both players.  look into while loop
   $('#stand-button').click(function () {
-    $('#deal-button').prop('disabled', true);
-    $('#hit-button').prop('disabled', true);
-    var dealerTotal = calculatePoints(dealerHand);
-    var playerTotal = calculatePoints(playerHand);
-    // if (dealerTotal < playerTotal && dealerTotal < 21) {
-    //   dealCards(deck, '#dealer-hand', '#dealer-points', dealerHand);
-    // }
-  });
-
-
-
-  // function shuffle(deck){
-  //
-  // }
+    $('#hit-button, #stand-button').attr('disabled', true);
+    var dealerTotal = dealerHand.calculatePoints();
+    var playerTotal = playerHand.calculatePoints();
+    while (dealerHand.calculatePoints() < 17 || dealerHand.calculatePoints() < playerHand) {
+      var card = deck.draw();
+      dealerHand.addCard(card);
+      $('#dealer-hand').append('<img class="card" src="' + card.getImageUrl() + '">');
+      $('#dealer-points').text(dealerHand.calculatePoints());
+    }
+    if (dealerHand.calculatePoints() > 21) {
+      $('#messages').append('Dealer busts');
+      $('#hit-button, #stand-button').attr('disabled', true);
+  }
+  else {
+    winner();
+  }
+});
 
 
   function dealCards(deck, handHolder, handPoints, handHolderArr) { //puns for days
@@ -98,100 +145,18 @@ $(document).ready(function() {
     console.log(handHolderArr.calculatePoints());
   }
 
-  // function shuffle(deck) {  //shuffles the deck
-  //  var currentIndex = deck.length, temporaryValue, randomIndex;
 
-   // While there remain elements to shuffle...
-  //  while (0 !== currentIndex) {
-   //
-  //    // Pick a remaining element...
-  //    randomIndex = Math.floor(Math.random() * currentIndex);
-  //    currentIndex -= 1;
-   //
-  //    // And swap it with the current element.
-  //    temporaryValue = deck[currentIndex];
-  //    deck[currentIndex] = deck[randomIndex];
-  //    deck[randomIndex] = temporaryValue;
-  //  }
-  //
-  //  return deck;
-  // }
-
-
-
-  // function bust(sum) {
-  //   var total = calculatePoints(hand);
-  //   if (total > 21) {
-  //     $('#message').append('You busted sucka!');
-  //   } else {
-  //     return;
-  //   }
-  // }
-
-
-// card constructor
-function Card(point, suit) {
-  this.point = point;
-  this.suit = suit;
-}
-
-Card.prototype.getImageUrl = function() {
-  var cardName = this.point;
-  if(cardName == 11){
-    cardName = "jack";
-  }
-  if(cardName == 12){
-    cardName = "queen";
-  }
-  if(cardName == 13){
-    cardName = "king";
-  }
-  if(cardName == 1){
-    cardName = "ace";
-  }
-  return "images/" + cardName + "_of_" + this.suit + ".png";
-};
-
-//hand
-function Hand() {
-  this.hand = [];
-}
-Hand.prototype.addCard = function(card) { //adds card to array
-  this.hand.push(card);
-  this.hand.sort(function (a, b) {
-    return b.point - a.point;
-  });
-};
-Hand.prototype.calculatePoints = function() {  //calculates points for a hand
-  var combine = function(sum, card) {
-    var point = card.point;
-    if (point === 11 || point === 12 || point === 13) {
-      point = 10;
+  function winner() {
+    if (playerHand.calculatePoints() < dealerHand.calculatePoints()) {
+      $('#messages').append('Dealer wins');
+    } else if (dealerHand.calculatePoints() < playerHand.calculatePoints()) {
+      $('#messages').append('You win');
+    } else if (playerHand.calculatePoints() === 21) {
+      $('#messages').append('Blackjack!');
+    } else {
+      $('#messages').append('Push');
     }
-    if (point === 1 && sum <= 10) {
-      point = 11;
-    }
-    return sum + point;
-  };
-  return this.hand.reduce(combine, 0);
-};
-  // function newDeck() {  //generates the deck
-  //  var deck = [];
-  //  var suits = ['spades', 'hearts', 'clubs', 'diamonds'];
-  //  for (var i = 1; i <= 13; i++) {
-  //    for (var j = 0; j <= 3; j++) {
-  //      deck.push(new Card(i, suits[j]));
-  //    }
-  //  }
-  //  return deck;
-  // }
+  }
 
-  // function winner() {
-  //   if (calculatePoints(playerHand) < 21 && (calculatePoints(playerHand) > (calculatePoints(dealerHand)) {
-  //     $('#messages').text('Blackjack!');
-  //   } else if ((calculatePoints(dealerHand) < 21 && (calculatePoints(dealerHand)) > (calculatePoints(playerHand)) {
-  //     $('#messages').text('Dealer wins');
-  //   }
-  // }
+
 });
-// calculatePoints(playerHand);
