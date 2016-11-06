@@ -92,7 +92,7 @@ $(document).ready(function() {
     dealCard(deck, '#player-hand', '#player-points', playerHand);
     dealCard(deck, '#dealer-hand', '#dealer-points', dealerHand);
     dealCard(deck, '#player-hand', '#player-points', playerHand);
-    dealCard(deck, '#dealer-hand', '#dealer-points', dealerHand);
+    dealHiddenCard(deck);
   });
 
 //Hit me!  Gives player additional card
@@ -116,8 +116,9 @@ $(document).ready(function() {
 
 //Dealing same total of cards for both players.  look into while loop
   $('#stand-button').click(function () {
-    $('#hit-button, #stand-button').prop('disabled', true);
+    $('#hit-button').prop('disabled', true);
     var dealerTotal = dealerHand.calculatePoints();
+    console.log(dealerTotal);
     var playerTotal = playerHand.calculatePoints();
     while (dealerHand.calculatePoints() < 17 || dealerHand.calculatePoints() < playerHand) {
       dealCard(deck, '#dealer-hand', '#dealer-points', dealerHand);
@@ -135,11 +136,10 @@ $(document).ready(function() {
   }
 });
 
-  function dealHiddenCard(deck, handHolder, handPoints, handHolderArr) {
+  function dealHiddenCard(deck) {
     var card = deck.draw();
-    handHolderArr.addCard(card);
-    $(handHolder).append('<img class="card" src="' + card.getImageUrl() + '">');
-    $(handPoints).text(handHolderArr.calculatePoints());
+    dealerHand.addCard(card);
+    $('#dealer-hand').append('<img class="card" src="images/cardback.png">');
   }
 
 //Deals a single card to player or dealer depending on arguments passed
