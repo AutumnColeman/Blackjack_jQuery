@@ -65,6 +65,7 @@ $(document).ready(function() {
     this.suit = suit;
   }
 
+//renders image of corresponding card based on point value
   Card.prototype.getImageUrl = function() {
     var cardName = this.point;
     if(cardName == 11){
@@ -86,16 +87,16 @@ $(document).ready(function() {
   var deck = new Deck();
   deck.shuffle();
 
-//Dealing same total of cards for both players
-  $('#deal-button').click(function() { //Deals inital cards
-    // dealCards(deck);
-    // dealCards(deck, '#player-hand', '#player-points', playerHand);
-    dealCards(deck, '#player-hand', '#player-points', playerHand);
-    dealCards(deck, '#dealer-hand', '#dealer-points', dealerHand);
-    // dealCards(deck, '#dealer-hand', '#dealer-points', dealerHand);
+//Deals inital cards
+  $('#deal-button').click(function() {
+    dealCard(deck, '#player-hand', '#player-points', playerHand);
+    dealCard(deck, '#dealer-hand', '#dealer-points', dealerHand);
+    dealCard(deck, '#player-hand', '#player-points', playerHand);
+    dealCard(deck, '#dealer-hand', '#dealer-points', dealerHand);
   });
 
-  $('#hit-button').click(function () { //Hit me!  Gives player additional card/s
+//Hit me!  Gives player additional card
+  $('#hit-button').click(function () {
     var card = deck.draw();
     playerHand.addCard(card);
     $('#player-hand').append('<img class="card" src="' + card.getImageUrl() + '">');
@@ -104,7 +105,7 @@ $(document).ready(function() {
     if (total > 21) {
       console.log(total);
       $('#messages').text('Bust');
-      $('#hit-button', '#stand-button').attr('disabled', true);
+      $('#hit-button', '#stand-button').prop('disabled', true);
     }
     var total2 = dealerHand.calculatePoints();
     if (total2 > 21) {
@@ -115,37 +116,42 @@ $(document).ready(function() {
 
 //Dealing same total of cards for both players.  look into while loop
   $('#stand-button').click(function () {
-    $('#hit-button, #stand-button').attr('disabled', true);
+    $('#hit-button, #stand-button').prop('disabled', true);
     var dealerTotal = dealerHand.calculatePoints();
     var playerTotal = playerHand.calculatePoints();
     while (dealerHand.calculatePoints() < 17 || dealerHand.calculatePoints() < playerHand) {
-      var card = deck.draw();
-      dealerHand.addCard(card);
-      $('#dealer-hand').append('<img class="card" src="' + card.getImageUrl() + '">');
-      $('#dealer-points').text(dealerHand.calculatePoints());
+      dealCard(deck, '#dealer-hand', '#dealer-points', dealerHand);
+      // var card = deck.draw();
+      // dealerHand.addCard(card);
+      // $('#dealer-hand').append('<img class="card" src="' + card.getImageUrl() + '">');
+      // $('#dealer-points').text(dealerHand.calculatePoints());
     }
     if (dealerHand.calculatePoints() > 21) {
       $('#messages').append('Dealer busts');
-      $('#hit-button, #stand-button').attr('disabled', true);
+      $('#hit-button, #stand-button').prop('disabled', true);
   }
   else {
     winner();
   }
 });
 
+  function dealHiddenCard(deck, handHolder, handPoints, handHolderArr) {
+    var card = deck.draw();
+    handHolderArr.addCard(card);
+    $(handHolder).append('<img class="card" src="' + card.getImageUrl() + '">');
+    $(handPoints).text(handHolderArr.calculatePoints());
+  }
 
-  function dealCards(deck, handHolder, handPoints, handHolderArr) { //puns for days
-    var card1 = deck.draw();
-    var card2 = deck.draw();
-    handHolderArr.addCard(card1);
-    handHolderArr.addCard(card2);
-    $(handHolder).append('<img class="card" src="' + card1.getImageUrl() + '">');
-    $(handHolder).append('<img class="card" src="' + card2.getImageUrl() + '">');
+//Deals a single card to player or dealer depending on arguments passed
+  function dealCard(deck, handHolder, handPoints, handHolderArr) { //puns for days
+    var card = deck.draw();
+    handHolderArr.addCard(card);
+    $(handHolder).append('<img class="card" src="' + card.getImageUrl() + '">');
     $(handPoints).text(handHolderArr.calculatePoints());
     console.log(handHolderArr.calculatePoints());
   }
 
-
+//checks for the winner
   function winner() {
     if (playerHand.calculatePoints() < dealerHand.calculatePoints()) {
       $('#messages').append('Dealer wins');
