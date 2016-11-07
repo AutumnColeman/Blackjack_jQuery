@@ -114,11 +114,14 @@ $(document).ready(function() {
     }
   });
 
-//Dealing same total of cards for both players.  look into while loop
+//Make it show the dealer card
   $('#stand-button').click(function () {
-    $('#hit-button').prop('disabled', true);
+    $("#hit-button").prop('disabled', true);
+    // console.log(dealerHand);
+    // console.log(dealerHand.hand["0"].point);
+    var card = dealerHand.hand["0"].point;
+    $('#hidden-dealer-hand').append('<img class="card" src="' + card.getImageUrl() + '">');
     var dealerTotal = dealerHand.calculatePoints();
-    console.log(dealerTotal);
     var playerTotal = playerHand.calculatePoints();
     while (dealerHand.calculatePoints() < 17 || dealerHand.calculatePoints() < playerHand) {
       dealCard(deck, '#dealer-hand', '#dealer-points', dealerHand);

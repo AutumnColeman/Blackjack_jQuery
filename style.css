@@ -23,7 +23,7 @@ label {
   margin: 4% 28%;
 }
 
-#player-hand, #dealer-hand {
+#player-hand, #dealer-hand, #hidden-dealer-hand {
   background-color: #00b794;
   width: 600px;
   height: 117px;
