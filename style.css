@@ -23,7 +23,7 @@ label {
   margin: 4% 28%;
 }
 
-#player-hand, #dealer-hand, #hidden-dealer-hand {
+#player-hand, #dealer-hand, #hidden-dealer-{
   background-color: #00b794;
   width: 600px;
   height: 117px;
@@ -80,4 +80,7 @@ label {
    text-align: center;
    color: red;
    margin: 0;
+ }
+ .cardBack {
+   /*display:none;*/
  }

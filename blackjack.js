@@ -86,13 +86,18 @@ $(document).ready(function() {
   var playerHand = new Hand();
   var deck = new Deck();
   deck.shuffle();
-
+  $('.cardBack').hide();
 //Deals inital cards
   $('#deal-button').click(function() {
+    debugger
     dealCard(deck, '#player-hand', '#player-points', playerHand);
     dealCard(deck, '#dealer-hand', '#dealer-points', dealerHand);
     dealCard(deck, '#player-hand', '#player-points', playerHand);
-    dealHiddenCard(deck);
+    dealHiddenCard(deck);  //hidden card value goes into deck but does not display yet
+    console.log(dealerHand);
+    $('.cardBack').show(); //displays back of card for dealer
+    // need card above to load second, not first
+
   });
 
 //Hit me!  Gives player additional card
@@ -116,33 +121,40 @@ $(document).ready(function() {
 
 //Make it show the dealer card
   $('#stand-button').click(function () {
+    debugger
+    $('.cardBack').hide(); //wtf, why not hiding?
     $("#hit-button").prop('disabled', true);
     // console.log(dealerHand);
     // console.log(dealerHand.hand["0"].point);
-    var card = dealerHand.hand["0"].point;
-    $('#hidden-dealer-hand').append('<img class="card" src="' + card.getImageUrl() + '">');
+    var card = dealerHand.hand[1]; //check to make sure right card
+    console.log(dealerHand);
+    console.log(dealerHand.hand[1]);
+    // console.log(cardPoint);
+    // console.log(cardSuit);
+    // console.log(dealerHand.hand["1"].point);
+    $('#dealer-hand').append('<img class="card" src="' + card.getImageUrl() + '">');
     var dealerTotal = dealerHand.calculatePoints();
     var playerTotal = playerHand.calculatePoints();
+    //checks total of dealer hand is less than 17 or less than player hand and adds cards accordingly
     while (dealerHand.calculatePoints() < 17 || dealerHand.calculatePoints() < playerHand) {
       dealCard(deck, '#dealer-hand', '#dealer-points', dealerHand);
-      // var card = deck.draw();
-      // dealerHand.addCard(card);
-      // $('#dealer-hand').append('<img class="card" src="' + card.getImageUrl() + '">');
-      // $('#dealer-points').text(dealerHand.calculatePoints());
     }
     if (dealerHand.calculatePoints() > 21) {
       $('#messages').append('Dealer busts');
-      $('#hit-button, #stand-button').prop('disabled', true);
+      $('#hit-button, #stand-button').prop('disabled', true); //why not working?
   }
   else {
     winner();
   }
 });
 
+  //hidden card
   function dealHiddenCard(deck) {
     var card = deck.draw();
     dealerHand.addCard(card);
-    $('#dealer-hand').append('<img class="card" src="images/cardback.png">');
+    // $('.cardBack').show();
+    // $('#dealer-hand').append('<img class="card" src="images/cardback.png">');
+    // $('#dealer-hand').append('<img class="card" src="' + card.getImageUrl() + '">');
   }
 
 //Deals a single card to player or dealer depending on arguments passed
@@ -151,7 +163,7 @@ $(document).ready(function() {
     handHolderArr.addCard(card);
     $(handHolder).append('<img class="card" src="' + card.getImageUrl() + '">');
     $(handPoints).text(handHolderArr.calculatePoints());
-    console.log(handHolderArr.calculatePoints());
+    // console.log(handHolderArr.calculatePoints());
   }
 
 //checks for the winner
