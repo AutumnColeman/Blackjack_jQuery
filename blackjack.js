@@ -100,15 +100,17 @@ $(document).ready(function() {
 
 //Deals inital cards
   $('#deal-button').click(function() {
+    this.disabled=true;
     $('#hit-button, #stand-button').attr('disabled', false);
     // debugger
     dealCard(deck, '#player-hand', '#player-points', playerHand);
     dealCard(deck, '#dealer-hand', '#dealer-points', dealerHand);
     dealCard(deck, '#player-hand', '#player-points', playerHand);
     dealHiddenCard(deck);  //hidden card value goes into deck but does not display yet
-    console.log(dealerHand);
-    // $('.cardBack').show(); //displays back of card for dealer
-    // need card above to load second, not first
+    if (playerHand.calculatePoints() === 21) {
+      $('#messages').append('Blackjack!');
+    }
+    //check for winner
 
   });
 
@@ -134,19 +136,9 @@ $(document).ready(function() {
 
 //Make it show the dealer card
   $('#stand-button').click(function () {
-    $("#hit-button").attr('disabled', true);
-
+    $("#hit-button, #deal-button").attr('disabled', true);
     $('.hiddencard').attr("src", dealerHand.hand[1].getImageUrl());
-    // console.log(dealerHand);
-    // console.log(dealerHand.hand["0"].point);
-    var card = dealerHand.hand[1]; //check to make sure right card
-    console.log(dealerHand);
-    console.log(dealerHand.hand[1]);
-    // console.log(cardPoint);
-    // console.log(cardSuit);
-    // console.log(dealerHand.hand["1"].point);
-    // $('#dealer-hand').append('<img class="card" src="' + card.getImageUrl() + '">');
-    debugger
+    // var card = dealerHand.hand[1]; //check to make sure right card
     var dealerTotal = dealerHand.calculatePoints();
     var playerTotal = playerHand.calculatePoints();
     //checks total of dealer hand is less than 17 or less than player hand and adds cards accordingly
@@ -166,9 +158,7 @@ $(document).ready(function() {
   function dealHiddenCard(deck) {
     var card = deck.draw();
     dealerHand.addCard(card);
-    // $('.cardBack').show();
     $('#dealer-hand').append('<img class="card hiddencard" src="images/cardback.png">');
-    // $('#dealer-hand').append('<img class="card" src="' + card.getImageUrl() + '">');
   }
 
 //Deals a single card to player or dealer depending on arguments passed
@@ -177,20 +167,16 @@ $(document).ready(function() {
     handHolderArr.addCard(card);
     $(handHolder).append('<img class="card" src="' + card.getImageUrl() + '">');
     $(handPoints).text(handHolderArr.calculatePoints());
-    // console.log(handHolderArr.calculatePoints());
   }
 
 //checks for the winner
   function winner() {
-    // var dealerTotal = dealerHand.calculatePoints();
     var playerTotal = playerHand.calculatePoints();
     if (playerHand.calculatePoints() < dealerHand.calculatePoints()) {
       var dealerTotal = dealerHand.calculatePoints();
       $('#messages').append('Dealer wins');
     } else if (dealerHand.calculatePoints() < playerHand.calculatePoints()) {
-      $('#messages').append('You win');
-    } else if (playerHand.calculatePoints() === 21) {
-      $('#messages').append('Blackjack!');
+      $('#messages').append('You win!');
     } else {
       $('#messages').append('Push');
     }
