@@ -23,7 +23,7 @@ label {
   margin: 4% 28%;
 }
 
-#player-hand, #dealer-hand, #hidden-dealer-{
+#player-hand, #dealer-hand{
   background-color: #00b794;
   width: 600px;
   height: 117px;
@@ -53,13 +53,13 @@ label {
   border: none;
 }
 
-.btn:hover {
+.btn:hover:enabled {
   background: #00b794;
   text-decoration: none;
 }
 
 .btn:disabled {
-  opacity: .3; 
+  opacity: .3;
 }
 
 .felt {
@@ -85,6 +85,7 @@ label {
    color: red;
    margin: 0;
  }
+
  #messages {
 
  }
