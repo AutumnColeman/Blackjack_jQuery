@@ -1,5 +1,5 @@
 #Blackjack
-<img src = "images/blackjack_deal.png" alt="Blackjack Game" width="400px" />
+<img src = "screenshots/blackjack_main.png" alt="Blackjack Game" width="400px" />
 ##Step 1: Arrange the table
 
 Create an HTML page and put the following markup in the body:
