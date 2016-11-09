@@ -58,9 +58,13 @@ label {
   text-decoration: none;
 }
 
+.btn:disabled {
+  opacity: .3; 
+}
+
 .felt {
   display: inline-block;
-  margin-top: -58px;
+  margin-top: -40px;
 }
  .title {
    font-family: 'Comfortaa', cursive;
@@ -81,6 +85,6 @@ label {
    color: red;
    margin: 0;
  }
- .cardBack {
-   /*display:none;*/
+ #messages {
+
  }

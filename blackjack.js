@@ -41,23 +41,32 @@ $(document).ready(function() {
   }
   Hand.prototype.addCard = function(card) { //adds card to array
     this.hand.push(card);
-    this.hand.sort(function (a, b) {
-      return b.point - a.point;
-    });
   };
   Hand.prototype.calculatePoints = function() {  //calculates points for a hand
-    var combine = function(sum, card) {
-      var point = card.point;
-      if (point === 11 || point === 12 || point === 13) {
+    // var hand = this.hand.slice(0);
+    // hand.sort(function (a, b) {
+    //   return b.point - a.point;
+    // });
+    var total = 0,
+    aces = 0;
+    for (var i = 0; i < this.hand.length; i++) {
+      var point = this.hand[i].point;
+      if (point === 1) {
+        total += 10;
+        aces++;
+      }
+      else if (point > 10) {
         point = 10;
       }
-      if (point === 1 && sum <= 10) {
-        point = 11;
+      total += point;
+      while (total > 21 && aces > 0) {
+        total -= 10;
+        aces--;
       }
-      return sum + point;
+    }
+    return total;
+
     };
-    return this.hand.reduce(combine, 0);
-  };
 
   // card constructor
   function Card(point, suit) {
@@ -86,16 +95,19 @@ $(document).ready(function() {
   var playerHand = new Hand();
   var deck = new Deck();
   deck.shuffle();
-  $('.cardBack').hide();
+  // $('.cardBack').hide();
+  $('#hit-button, #stand-button').attr('disabled', true); //why not working
+
 //Deals inital cards
   $('#deal-button').click(function() {
-    debugger
+    $('#hit-button, #stand-button').attr('disabled', false);
+    // debugger
     dealCard(deck, '#player-hand', '#player-points', playerHand);
     dealCard(deck, '#dealer-hand', '#dealer-points', dealerHand);
     dealCard(deck, '#player-hand', '#player-points', playerHand);
     dealHiddenCard(deck);  //hidden card value goes into deck but does not display yet
     console.log(dealerHand);
-    $('.cardBack').show(); //displays back of card for dealer
+    // $('.cardBack').show(); //displays back of card for dealer
     // need card above to load second, not first
 
   });
@@ -111,6 +123,7 @@ $(document).ready(function() {
       console.log(total);
       $('#messages').text('Bust');
       $('#hit-button', '#stand-button').prop('disabled', true);
+
     }
     var total2 = dealerHand.calculatePoints();
     if (total2 > 21) {
@@ -121,9 +134,9 @@ $(document).ready(function() {
 
 //Make it show the dealer card
   $('#stand-button').click(function () {
-    debugger
-    $('.cardBack').hide(); //wtf, why not hiding?
-    $("#hit-button").prop('disabled', true);
+    $("#hit-button").attr('disabled', true);
+
+    $('.hiddencard').attr("src", dealerHand.hand[1].getImageUrl());
     // console.log(dealerHand);
     // console.log(dealerHand.hand["0"].point);
     var card = dealerHand.hand[1]; //check to make sure right card
@@ -132,7 +145,8 @@ $(document).ready(function() {
     // console.log(cardPoint);
     // console.log(cardSuit);
     // console.log(dealerHand.hand["1"].point);
-    $('#dealer-hand').append('<img class="card" src="' + card.getImageUrl() + '">');
+    // $('#dealer-hand').append('<img class="card" src="' + card.getImageUrl() + '">');
+    debugger
     var dealerTotal = dealerHand.calculatePoints();
     var playerTotal = playerHand.calculatePoints();
     //checks total of dealer hand is less than 17 or less than player hand and adds cards accordingly
@@ -153,7 +167,7 @@ $(document).ready(function() {
     var card = deck.draw();
     dealerHand.addCard(card);
     // $('.cardBack').show();
-    // $('#dealer-hand').append('<img class="card" src="images/cardback.png">');
+    $('#dealer-hand').append('<img class="card hiddencard" src="images/cardback.png">');
     // $('#dealer-hand').append('<img class="card" src="' + card.getImageUrl() + '">');
   }
 
@@ -168,7 +182,10 @@ $(document).ready(function() {
 
 //checks for the winner
   function winner() {
+    // var dealerTotal = dealerHand.calculatePoints();
+    var playerTotal = playerHand.calculatePoints();
     if (playerHand.calculatePoints() < dealerHand.calculatePoints()) {
+      var dealerTotal = dealerHand.calculatePoints();
       $('#messages').append('Dealer wins');
     } else if (dealerHand.calculatePoints() < playerHand.calculatePoints()) {
       $('#messages').append('You win');
