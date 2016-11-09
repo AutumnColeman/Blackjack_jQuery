@@ -146,7 +146,7 @@ $(document).ready(function() {
       dealCard(deck, '#dealer-hand', '#dealer-points', dealerHand);
     }
     if (dealerHand.calculatePoints() > 21) {
-      $('#messages').append('Dealer busts');
+      $('#messages').append('Dealer busts. You win!');
       $('#hit-button, #stand-button').prop('disabled', true); //why not working?
   }
   else {
@@ -184,3 +184,6 @@ $(document).ready(function() {
 
 
 });
+
+
+//not calculating facecards

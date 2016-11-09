@@ -87,5 +87,7 @@ label {
  }
 
  #messages {
-
+   text-align: center;
+   font-size: 2em;
+   margin-top: -6%;
  }
