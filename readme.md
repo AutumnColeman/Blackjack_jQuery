@@ -1,7 +1,7 @@
 #Blackjack
 <img src = "screenshots/blackjack_main.png" alt="Blackjack Game" width="400px" />
 
-Live Demo: http://blackjack.surge.sh/blackjack.html
+**Live Demo:** http://blackjack.surge.sh/blackjack.html
 
 ##Criteria
   * Use constructors to create the deck, card, and player/dealer hands
