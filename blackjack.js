@@ -95,6 +95,7 @@ $(document).ready(function() {
   var playerHand = new Hand();
   var deck = new Deck();
   deck.shuffle();
+  $('#again-button').hide();
   // $('.cardBack').hide();
   $('#hit-button, #stand-button').attr('disabled', true); //why not working
 
@@ -175,8 +176,12 @@ $(document).ready(function() {
     if (playerHand.calculatePoints() < dealerHand.calculatePoints()) {
       var dealerTotal = dealerHand.calculatePoints();
       $('#messages').append('Dealer wins');
+      $('#again-button').show();
+      $('#hit-button, #stand-button').attr('disabled', true);
     } else if (dealerHand.calculatePoints() < playerHand.calculatePoints()) {
       $('#messages').append('You win!');
+      $('#again-button').show();
+      $('#hit-button, #stand-button').attr('disabled', true);
     } else {
       $('#messages').append('Push');
     }
